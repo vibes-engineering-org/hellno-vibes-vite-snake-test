@@ -1,6 +1,7 @@
 import { sdk } from "@farcaster/miniapp-sdk";
 import { useEffect } from "react";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
+import SnakeGame from "./SnakeGame";
 
 function App() {
   useEffect(() => {
@@ -11,38 +12,30 @@ function App() {
   return (
     <div
       style={{
-        padding: "20px",
-        maxWidth: "600px",
-        margin: "0 auto",
+        padding: "16px",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        gap: "2rem",
+        gap: "16px",
       }}
     >
-      <h1
-        style={{
-          fontSize: "clamp(1.5rem, 5vw, 2.5rem)",
-          textAlign: "center",
-          margin: "0",
-          fontWeight: "bold",
-        }}
-      >
-        Vibes Engineering Template
-      </h1>
-      <p
-        style={{
-          fontSize: "clamp(0.875rem, 2.5vw, 1.125rem)",
-          textAlign: "center",
-          margin: "0",
-          opacity: 0.8,
-        }}
-      >
-        Ready to launch 🚀
-      </p>
-      <ConnectMenu />
+      <div className="xp-window" style={{ maxWidth: "500px", width: "100%" }}>
+        <div className="xp-titlebar">
+          <span>Vibes Engineering - Retro Gaming</span>
+        </div>
+        <div className="xp-panel" style={{ textAlign: "center" }}>
+          <h2 style={{ margin: "8px 0", fontSize: "14px", fontWeight: "bold" }}>
+            Welcome to the Retro Arcade
+          </h2>
+          <p style={{ margin: "8px 0", fontSize: "11px" }}>
+            Experience classic gaming with Windows XP style
+          </p>
+          <ConnectMenu />
+        </div>
+      </div>
+      
+      <SnakeGame />
     </div>
   );
 }
@@ -53,17 +46,24 @@ function ConnectMenu() {
 
   if (isConnected) {
     return (
-      <>
-        <div>Connected account:</div>
-        <div>{address}</div>
+      <div style={{ margin: "8px 0" }}>
+        <div style={{ fontSize: "11px", marginBottom: "4px" }}>Connected account:</div>
+        <div style={{ fontSize: "10px", fontFamily: "monospace", marginBottom: "8px", wordBreak: "break-all" }}>
+          {address}
+        </div>
         <SignButton />
-      </>
+      </div>
     );
   }
 
   return (
-    <button type="button" onClick={() => connect({ connector: connectors[0] })}>
-      Connect
+    <button 
+      type="button" 
+      className="xp-button"
+      onClick={() => connect({ connector: connectors[0] })}
+      style={{ margin: "8px 0" }}
+    >
+      Connect Wallet
     </button>
   );
 }
@@ -72,27 +72,31 @@ function SignButton() {
   const { signMessage, isPending, data, error } = useSignMessage();
 
   return (
-    <>
+    <div style={{ margin: "8px 0" }}>
       <button
         type="button"
+        className="xp-button"
         onClick={() => signMessage({ message: "hello world" })}
         disabled={isPending}
+        style={{ marginBottom: "8px" }}
       >
-        {isPending ? "Signing..." : "Sign message"}
+        {isPending ? "Signing..." : "Sign Message"}
       </button>
       {data && (
-        <>
-          <div>Signature</div>
-          <div>{data}</div>
-        </>
+        <div className="xp-panel" style={{ margin: "8px 0", fontSize: "10px" }}>
+          <div style={{ marginBottom: "4px", fontWeight: "bold" }}>Signature:</div>
+          <div style={{ fontFamily: "monospace", wordBreak: "break-all" }}>
+            {data}
+          </div>
+        </div>
       )}
       {error && (
-        <>
-          <div>Error</div>
-          <div>{error.message}</div>
-        </>
+        <div className="xp-panel" style={{ margin: "8px 0", fontSize: "10px", background: "#ffcccc" }}>
+          <div style={{ marginBottom: "4px", fontWeight: "bold", color: "#cc0000" }}>Error:</div>
+          <div style={{ color: "#cc0000" }}>{error.message}</div>
+        </div>
       )}
-    </>
+    </div>
   );
 }
 
